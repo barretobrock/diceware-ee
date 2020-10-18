@@ -1,43 +1,73 @@
 #! /usr/bin/env python3
 # coding=utf-8
-
-import random as rnd
-import sys
-
-def main():
-    rnd.seed(0)
-    file = sys.argv[1]
-    with open(file, 'r') as f:
-        lines = f.readlines()
-
-    dice_per_word = 5
-    dice_faces = 6
-    n_words = dice_faces ** dice_per_word
-    assert len(lines) >= n_words
-
-    selected_words = sorted(rnd.sample(lines, n_words))
-    indexed_words = zip(word_indexes(dice_per_word, dice_faces), selected_words)
-
-    for i, iw in enumerate(indexed_words):
-        print("{}\t{}".format(iw[0], iw[1].strip()))
+import os
+import argparse
+from typing import List
+from random import sample
 
 
-def word_indexes(dice_per_word=5, dice_faces=6):
-    max_val = dice_faces
-    max_idx = [max_val for i in range(dice_per_word)]
-    idx = [1 for i in range(dice_per_word)]
-    while idx <= max_idx:
-        yield "".join(map(str, idx))
-        idx[-1] += 1
-        for i in range(1, dice_per_word):
-            if idx[-i] > max_val:
-                if i == 0:
-                    break
-                else:
-                    idx[-i] = 1
-                    idx[-(i + 1)] += 1
-            else:
-                break
+def get_lemmad_filepath() -> str:
+    """Returns the filepath of the desired list of lemmad to use."""
+    # Default lemmad file path
+    default_path = os.path.abspath('lemmad.txt')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--file', help='File containing lemmad', default=default_path)
+    args = parser.parse_known_args()
 
-if __name__ == '__main__':
-    main()
+    for arg in args:
+        if isinstance(arg, argparse.Namespace):
+            arg_dict = vars(arg)
+            if 'file' in arg_dict.keys():
+                return arg_dict['file']
+    return default_path
+
+
+def clean_phrase(phrase: str) -> str:
+    """Cleans a returned phrase according to specifications"""
+    mapping = {
+        'ä': '2',
+        'ö': '4',
+        'õ': '6',
+        'ü': 'y',
+        'ž': 'zh',
+        'š': 'sh'
+    }
+    for char, rep in mapping.items():
+        if char in phrase:
+            phrase = phrase.replace(char, rep)
+    return phrase
+
+
+def generate_phrase(n_phrases: int = 6, n_words: int = 6, char_limit: int = None,
+                    n_attempts: int = 50) -> List[str]:
+    """Generates passphrase"""
+    phrases = []
+    if char_limit is not None:
+        for n in range(n_attempts):
+            if len(phrases) >= n_phrases:
+                return phrases
+            phrase = clean_phrase('-'.join(sample(selected_words, n_words)))
+            if len(phrase) <= char_limit:
+                phrases.append(phrase)
+    else:
+        for n in range(n_phrases):
+            phrase = clean_phrase('-'.join(sample(selected_words, n_words)))
+            phrases.append(phrase)
+    return phrases
+
+
+fpath = get_lemmad_filepath()
+with open(fpath, 'r') as f:
+    lines = [x.strip() for x in f.readlines()]
+
+dice_per_word = 5
+dice_faces = 6
+# Determine number of words to sample
+total_words = dice_faces ** dice_per_word
+assert len(lines) >= total_words
+
+selected_words = sorted(sample(lines, total_words))
+
+
+generated = generate_phrase(n_phrases=6, n_words=3, char_limit=30, n_attempts=1000)
+print('\n'.join(generated))
