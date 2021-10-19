@@ -4,7 +4,7 @@ import os
 
 # ==============================================================================
 # These are things that likely should be changed before installation
-REPO_NAME = 'diceware'   # Repo
+REPO_NAME = 'diceware-ee'   # Repo
 VENV_NAME = 'diceware'        # Virtual environment
 MAIN_BRANCH = 'master'      # The primary branch of the repo
 # Description of the repo
