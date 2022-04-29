@@ -1,18 +1,10 @@
-"""Setup the module.
-Resources to build this:
-    https://packaging.python.org/en/latest/distributing.html
-    https://github.com/pypa/sampleproject
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-import versioneer
-from setuptools import setup, find_packages
-from config import config_dict
+    So, pyproject.toml takes over the setup.py functions. For development work, we'll keep this,
+        but it's really not needed for anything other than making an editable install.
+"""
+import setuptools
 
-
-setup_args = {
-    'version': versioneer.get_version(),
-    'cmdclass': versioneer.get_cmdclass(),
-    'packages': find_packages(exclude=['tests']),
-}
-setup_args.update(config_dict)
-
-setup(**setup_args)
+if __name__ == '__main__':
+    setuptools.setup()

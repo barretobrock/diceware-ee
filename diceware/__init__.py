@@ -4,5 +4,5 @@ from .phrases import (
     read_raw_words,
     sample_and_gen
 )
-from . import _version
-__version__ = _version.get_versions()['version']
+__version__ = '0.2.0'
+__update_date__ = '2022-04-29_12:41:22'
