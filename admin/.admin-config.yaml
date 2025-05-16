@@ -1,0 +1,6 @@
+PROJECT: diceware-ee
+PY_LIB_NAME: diceware
+PROJECT_DIR: ${HOME}/extras/${PROJECT}
+VENV_NAME: dice-312
+VENV_PATH: ${HOME}/venvs/${VENV_NAME}/bin/python3
+MAIN_BRANCH: master

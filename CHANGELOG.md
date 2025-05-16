@@ -15,6 +15,13 @@ _Note: 'Unreleased' section below is used for untagged changes that will be issu
 #### Security
 __BEGIN-CHANGELOG__
  
+### [0.3.0] - 2025-05-16
+#### Added
+ - Bumped support to Python 3.12
+#### Changed
+ - Removed hard pin to Python minor version
+ - Migrated to updated admin scripts, remove dependency on ppm
+ 
 ### [0.2.0] - 2022-04-29
 #### Added
  - CHANGELOG
